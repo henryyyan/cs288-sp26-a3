@@ -13,9 +13,9 @@ from pathlib import Path
 def load():
     script_dir = Path(__file__).parent
     
-    index_path = script_dir / "eecs_ind.faiss"
-    json_path = script_dir / "data_storage.json"
-    bm25_path = script_dir / "bm25.pkl"
+    index_path = script_dir / "eecs_ind_100-20.faiss"
+    json_path = script_dir / "data_storage_100-20.json"
+    bm25_path = script_dir / "bm25_100-20.pkl"
     df = pd.read_json(str(json_path), orient="records")
     
     model = SentenceTransformer('BAAI/bge-small-en-v1.5')
@@ -56,7 +56,7 @@ def main():
     4. If the question asks for a DATE or DEADLINE, output only the date in the exact format found in the context.
     5. If the question requires COUNTING items listed in the context, count them carefully and output only the number.
     6. If the question is Yes/No, output exactly "Yes" or "No".
-    7. Never add parenthetical details, date ranges, or qualifiers after your answer.
+    7. Never use the words and, or, if, but, since in your answer. Always provide a direct answer without conjunctions or explanations.
     8. If the answer is not explicitly in the context, make your best guess based on any related information in the context or your base knowledge. When answering according to this rule, you must still follow the previous rules listed above."""
     
     for q in questions:

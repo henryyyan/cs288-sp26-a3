@@ -1,5 +1,4 @@
 #!/bin/bash
-cat src/RAG/eecs_ind.faiss.part.* > src/RAG/eecs_ind.faiss
-cat src/RAG/data_storage.json.part.* > src/RAG/data_storage.json
-
+cat src/RAG/eecs_ind_100-20.faiss.part.* > src/RAG/eecs_ind_100-20.faiss
+cat src/RAG/data_storage_100-20.json.part.* > src/RAG/data_storage_100-20.json
 python3 src/RAG/generate.py "$1" "$2"
