@@ -6,6 +6,7 @@ from sentence_transformers import SentenceTransformer
 import llm
 import sys
 import json
+import pickle
 from pathlib import Path
 
 
@@ -14,11 +15,13 @@ def load():
     
     index_path = script_dir / "eecs_ind.faiss"
     json_path = script_dir / "data_storage.json"
+    bm25_path = script_dir / "bm25.pkl"
     df = pd.read_json(str(json_path), orient="records")
     
     model = SentenceTransformer('BAAI/bge-small-en-v1.5')
     ind = faiss.read_index(str(index_path))
-    bm25 = BM25Okapi([[word.lower() for word in doc.split() if len(word) > 2] for doc in df['txt'].tolist()])
+    with open(bm25_path, "rb") as f:
+        bm25 = pickle.load(f)
     
     return model, ind, df, bm25
 
@@ -45,14 +48,16 @@ def main():
         questions = [line.strip().strip('"\'') for line in f if line.strip()]
 
     ans = []
-    sys_prompt = """You are a highly precise QA bot for the UC Berkeley EECS department. 
+    sys_prompt = """You are a highly precise QA bot for the UC Berkeley EECS department.
     Base your answer STRICTLY on the provided context. Follow these rules exactly:
-    1. Extract the exact short answer directly from the text (must be under 10 words).
-    2. Do NOT write full sentences or conversational filler. Output ONLY the core entity, name, date, or number.
-    3. If there are multiple valid answers in the context, provide ONLY ONE of them.
-    4. If the question is a Yes/No question, output exactly "Yes" or "No".
-    5. If the question requires counting or arithmetic, output ONLY the final calculated number.
-    6. If the exact answer is absolutely not in the context, output "Not available"."""
+    1. Output ONLY the answer — no explanation, no punctuation, no trailing text.
+    2. If the question asks for a NAME, output ONLY the name. Never output a year, date, or number when a name is asked for.
+    3. If the question asks for a PLACE, output ONLY the place name with NO extra details.
+    4. If the question asks for a DATE or DEADLINE, output only the date in the exact format found in the context.
+    5. If the question requires COUNTING items listed in the context, count them carefully and output only the number.
+    6. If the question is Yes/No, output exactly "Yes" or "No".
+    7. Never add parenthetical details, date ranges, or qualifiers after your answer.
+    8. If the answer is not explicitly in the context, make your best guess based on any related information in the context or your base knowledge. When answering according to this rule, you must still follow the previous rules listed above."""
     
     for q in questions:
         try:

@@ -5,6 +5,7 @@ from sentence_transformers import SentenceTransformer
 from pathlib import Path
 import pickle
 import torch
+from rank_bm25 import BM25Okapi
 
 parsed_dir = Path("../crawler/parsed_documents")
 
@@ -47,3 +48,7 @@ index.add(embed)
 
 faiss.write_index(index, "eecs_ind.faiss")
 df.to_json("data_storage.json", orient="records")
+
+bm25 = BM25Okapi([[word.lower() for word in doc.split() if len(word) > 2] for doc in df['txt'].tolist()])
+with open("bm25.pkl", "wb") as f:
+    pickle.dump(bm25, f)
