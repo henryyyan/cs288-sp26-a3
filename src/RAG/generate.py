@@ -19,7 +19,6 @@ def load():
     model = SentenceTransformer('BAAI/bge-small-en-v1.5')
     ind = faiss.read_index(str(index_path))
     bm25 = BM25Okapi([[word.lower() for word in doc.split() if len(word) > 2] for doc in df['txt'].tolist()])
-    o
     return model, ind, df, bm25
 
 def get_context(q, model, index, df, bm25, k_dense=8, k_sparse=4):
