@@ -12,8 +12,8 @@ from pathlib import Path
 def load():
     script_dir = Path(__file__).parent
     
-    index_path = script_dir / "eecs_ind_100-20.faiss"
-    json_path = script_dir / "data_storage_100-20.json" 
+    index_path = script_dir / "eecs_ind_100-60.faiss"
+    json_path = script_dir / "data_storage_100-60.json" 
     df = pd.read_json(str(json_path), orient="records")
     
     model = SentenceTransformer('BAAI/bge-small-en-v1.5')
