@@ -7,12 +7,12 @@ import pickle
 import torch
 from rank_bm25 import BM25Okapi
 
-parsed_dir = Path("../crawler/parsed_documents")
+parsed_dir = Path("/Users/henryyan123/Desktop/cs288-sp26-a3/src/crawler/parsed_documents")
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
 embed_model = SentenceTransformer('BAAI/bge-small-en-v1.5', device=device)
 
-chunk_sizes = [100, 300]
+chunk_sizes = [100, 300] # originally (200, 40)
 overlaps = [20, 60]
 
 for chunk_size in chunk_sizes:
