@@ -1,0 +1,4 @@
+src/RAG/eecs_ind.faiss
+src/RAG/data_storage.json
+src/crawler/
+**/.DS_Store
